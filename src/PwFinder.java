@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 public class PwFinder extends JFrame {
     PwFinder() {
@@ -23,12 +25,38 @@ public class PwFinder extends JFrame {
             inputDesc.setHorizontalAlignment(JLabel.CENTER);
             inputDesc.setFont(new Font("맑은 고딕", Font.BOLD, 24));
 
-            JLabel inputInfoDesc = new JLabel("이름과 아이디를 입력하세요");
+            JLabel inputInfoDesc = new JLabel("아이디를 입력하세요");
             inputInfoDesc.setHorizontalAlignment(JLabel.CENTER);
             inputInfoDesc.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
-
-            JTextField inputName = new JTextField();
+            
             JTextField inputId = new JTextField();
+            
+            Font gainFont = new Font("맑은 고딕", Font.PLAIN, 15);
+            Font lostFont = new Font("맑은 고딕", Font.PLAIN, 15);
+
+            inputId.setText("아이디를 입력하세요");
+            inputId.setFont(lostFont);
+            inputId.setForeground(Color.GRAY);
+            inputId.addFocusListener(new FocusListener() {	// 텍스트 필드 포커스 시 이벤트
+
+                @Override
+                public void focusLost(FocusEvent e) {	// 포커스를 잃었을 때,
+                    if (inputId.getText().equals("")) {
+                    	inputId.setText("아이디를 입력하세요");
+                    	inputId.setFont(lostFont);
+                    	inputId.setForeground(Color.GRAY);
+                    }
+                }
+
+                @Override
+                public void focusGained(FocusEvent e) {	// 포커스를 얻었을 때,
+                    if (inputId.getText().equals("아이디를 입력하세요")) {
+                    	inputId.setText("");
+                    	inputId.setFont(gainFont);
+                    	inputId.setForeground(Color.BLACK);
+                    }
+                }
+            });
 
             JButton toChangePw = new JButton("다음");
             toChangePw.setBackground(new Color(29,161,242));
@@ -44,7 +72,6 @@ public class PwFinder extends JFrame {
 
             inputPanel.add(inputDesc);
             inputPanel.add(inputInfoDesc);
-            inputPanel.add(inputName);
             inputPanel.add(inputId);
             inputPanel.add(toChangePw);
 
@@ -77,7 +104,7 @@ public class PwFinder extends JFrame {
             inputPwDesc.setHorizontalAlignment(JLabel.CENTER);
             inputPwDesc.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 
-            JTextField inputPw = new JTextField();
+            JPasswordField inputPw = new JPasswordField();
 
             JButton toLogin = new JButton("변경 완료");
             toLogin.setBackground(new Color(29,161,242));
