@@ -68,17 +68,20 @@ public class Login extends JFrame {
         inputPanel.add(idField);
         inputPanel.add(pwField);
 
+        // ---------------------- ·Î±×ÀÎ ----------------------------
         JButton loginButton = new JButton("·Î±×ÀÎ");
-        loginButton.setBackground(new Color(29,161,242));
-        loginButton.setFont(new Font("¸¼Àº °íµñ", Font.BOLD, 12));
-        loginButton.setForeground(Color.WHITE);
+        loginButton.setFont(new Font("¸¼Àº °íµñ", Font.PLAIN, 12));
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
                 new Board();
+                
+                // idField.getText() : String
+                // pwField.getPassword() : char[]
             }
         });
+        // ---------------------- ·Î±×ÀÎ ----------------------------
 
         JButton registerButton = new JButton("È¸¿ø°¡ÀÔ");
         registerButton.setFont(new Font("¸¼Àº °íµñ", Font.PLAIN, 12));

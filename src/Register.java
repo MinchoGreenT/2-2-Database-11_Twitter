@@ -7,6 +7,10 @@ public class Register extends JFrame {
     Register() {
         new RegisterName();
     }
+    
+    static String name;
+    static String id;
+    static char[] pw;
 
     // 이름 입력
     static class RegisterName extends JFrame {
@@ -37,6 +41,7 @@ public class Register extends JFrame {
             toInputId.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                	name = inputName.getText();
                     dispose();
                     new RegisterId();
                 }
@@ -86,6 +91,7 @@ public class Register extends JFrame {
             toInputPw.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                	id = inputId.getText();
                     dispose();
                     new RegisterPw();
                 }
@@ -132,14 +138,21 @@ public class Register extends JFrame {
             registerFinish.setBackground(new Color(29,161,242));
             registerFinish.setFont(new Font("맑은 고딕", Font.BOLD, 12));
             registerFinish.setForeground(Color.WHITE);
+            
+            // ---------------------- 회원가입 ----------------------------
             registerFinish.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                	pw = inputPw.getPassword();
                     dispose();
                     new Login();
+                    // name
+                    // id
+                    // pw
                 }
             });
-
+         // ---------------------- 회원가입 ----------------------------
+            
             inputPanel.add(inputDesc);
             inputPanel.add(inputPwDesc);
             inputPanel.add(inputPw);

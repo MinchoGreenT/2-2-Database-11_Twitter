@@ -9,6 +9,9 @@ public class PwFinder extends JFrame {
     PwFinder() {
         new InputInfo();
     }
+    
+    static String id;
+    static char[] newPw;
 
     static class InputInfo extends JFrame {
         InputInfo() {
@@ -65,6 +68,7 @@ public class PwFinder extends JFrame {
             toChangePw.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                	id = inputId.getText();
                     dispose();
                     new ChangePw();
                 }
@@ -110,13 +114,18 @@ public class PwFinder extends JFrame {
             toLogin.setBackground(new Color(29,161,242));
             toLogin.setFont(new Font("맑은 고딕", Font.BOLD, 12));
             toLogin.setForeground(Color.WHITE);
+            // ---------------------- 비밀번호 변경 ----------------------------
             toLogin.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                	newPw = inputPw.getPassword();
                     dispose();
                     new Login();
+                    // id
+                    // newPw
                 }
             });
+            // ---------------------- 비밀번호 변경 ----------------------------
 
             inputPanel.add(inputDesc);
             inputPanel.add(inputPwDesc);
