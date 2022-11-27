@@ -121,8 +121,8 @@ public class PwFinder extends JFrame {
                 	newPw = inputPw.getPassword();
                     dispose();
                     new Login();
-                    // id
-                    // newPw
+	                 // id에 아이디, newPw에 바꿀 비밀번호가 들어감
+	                 // 아이디를 통해 접근해서 비밀번호를 newPw로 바꿔주면 됩니다
                 }
             });
             // ---------------------- 비밀번호 변경 ----------------------------

@@ -3,14 +3,20 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Objects;
 
 public class Board extends JFrame {
+	
+	static JFrame con;
+	
     Board(String userId) {
+    	con = this;
         setSize(1200, 800);
         setLayout(new BorderLayout());
 
-        JPanel userProfile = new JPanel(new GridLayout(1, 5));
+        JPanel userProfile = new JPanel(new GridLayout(1, 6));
         userProfile.setBorder(BorderFactory.createEmptyBorder(10,200,10,200));
 
         Image logo =new ImageIcon(Objects.requireNonNull(Main.class.getResource("/image/logo_profile.png"))).getImage();
@@ -20,30 +26,58 @@ public class Board extends JFrame {
         String userName = "이은섭";
         // userId를 인자로 받아올거니까 userId로 이름을 받아와서 userName으로 쓰면 되겠음
         JLabel userInfo = new JLabel("<html>" + userName + "<br>@" + userId + "<html>");
+        userInfo.setForeground(Color.WHITE);
         userInfo.setHorizontalAlignment(JLabel.CENTER);
-        userInfo.setVerticalAlignment(JLabel.BOTTOM);
-        userInfo.setFont(new Font("맑은 고딕", Font.BOLD, 24));
+        userInfo.setVerticalAlignment(JLabel.CENTER);
+        userInfo.setFont(new Font("맑은 고딕", Font.BOLD, 20));
         
         // 여기 또한 인자로 받은 userId와 팔로잉 테이블을 이용해서 팔로워, 팔로잉 수를 가져오면 됨
         int followerNum = 100;
         int followingNum = 101;
-        JLabel userFollowing = new JLabel("팔로잉 " + followingNum);
+        
+        JLabel userFollowing = new JLabel("<html>팔로잉<br>" + followingNum + "<html>");
+        userFollowing.setForeground(Color.WHITE);
         userFollowing.setHorizontalAlignment(JLabel.CENTER);
-        userFollowing.setVerticalAlignment(JLabel.BOTTOM);
-        userFollowing.setFont(new Font("맑은 고딕", Font.BOLD, 24));
-        JLabel userFollower = new JLabel("팔로워 " + followerNum);
+        userFollowing.setVerticalAlignment(JLabel.CENTER);
+        userFollowing.setFont(new Font("맑은 고딕", Font.BOLD, 20));
+        
+        JLabel userFollower = new JLabel("<html>팔로워<br>" + followerNum + "<html>");
+        userFollower.setForeground(Color.WHITE);
         userFollower.setHorizontalAlignment(JLabel.CENTER);
-        userFollower.setVerticalAlignment(JLabel.BOTTOM);
-        userFollower.setFont(new Font("맑은 고딕", Font.BOLD, 24));
+        userFollower.setVerticalAlignment(JLabel.CENTER);
+        userFollower.setFont(new Font("맑은 고딕", Font.BOLD, 20));
 
         JLabel margin = new JLabel("");
+        JButton search = new JButton("검색");
+        search.setFont(new Font("맑은 고딕", Font.BOLD, 24));
+        search.setBorderPainted(false);
+        search.setContentAreaFilled(false);
+        search.setFocusPainted(false);
+        search.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Search(con);
+            }
+        });
+        JButton newMessage = new JButton("글쓰기");
+        newMessage.setFont(new Font("맑은 고딕", Font.BOLD, 24));
+        newMessage.setBorderPainted(false);
+        newMessage.setContentAreaFilled(false);
+        newMessage.setFocusPainted(false);
+        newMessage.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new NewMessage(con, userId);
+            }
+        });
         
         // 여긴 프로필사진 넣는곳인데 그냥 트위터 사진으로 함
         userProfile.add(new JLabel(new ImageIcon(logoIcon)));
         userProfile.add(userInfo);
         userProfile.add(userFollowing);
         userProfile.add(userFollower);
-        userProfile.add(margin);
+        userProfile.add(search);
+        userProfile.add(newMessage);
         userProfile.setBackground(new Color(0x85BDFF));
         // -------------------------------- 프로필 패널 -------------------------------------
 
@@ -54,6 +88,7 @@ public class Board extends JFrame {
         JScrollPane userBoardScroll = new JScrollPane(userBoard, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         userBoardScroll.getVerticalScrollBar().setUnitIncrement(20);
 
+        // ----------------- 메세지 보드 ----------------------------------
         // 본 주석 하단에 메세지 객체 생성 및 삽입 코드가 들어감
         // messageBoard는 하나의 메세지를 구성하는 "패널"
         // 생성자의 인자로는 메세지 id를 넣어서 생성자가 id를 가지고 패널을 구성함
@@ -72,17 +107,17 @@ public class Board extends JFrame {
         
         //-------------------------------------------------------- 메세지 끝
         
+      //-------------------------------------------------------- 팔로잉/팔로워
+        
         JPanel userFollowingBoard = new JPanel();
         userFollowingBoard.setBackground(Color.WHITE);
         userFollowingBoard.setLayout(new BoxLayout(userFollowingBoard, BoxLayout.Y_AXIS));
         JScrollPane userFollowingBoardScroll = new JScrollPane(userFollowingBoard, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         userFollowingBoardScroll.getVerticalScrollBar().setUnitIncrement(20);
-
-        // 본 주석 하단에 메세지 객체 생성 및 삽입 코드가 들어감
-        // messageBoard는 하나의 메세지를 구성하는 "패널"
-        // 생성자의 인자로는 메세지 id를 넣어서 생성자가 id를 가지고 패널을 구성함
-        // 생성자 내부에서 id로 메세지 정보를 불러와서 패널 구성해야됨
         
+	     // 여기에 팔로잉 유저들을 불러와서 출력하면 되겠습니다
+	     // userFollowingBoard.add(new FollowBoard(유저이름, 유저아이디) 형식으로 추가
+	     // 반복문을 통해서 팔로잉 수만큼 추가해주면 됩니다
         FollowBoard yeah = new FollowBoard("이름", "아이디");
         userFollowingBoard.add(yeah);
         userFollowingBoard.add(new FollowBoard("이름","아아아이이이디"));
@@ -92,12 +127,8 @@ public class Board extends JFrame {
         userFollowerBoard.setLayout(new BoxLayout(userFollowerBoard, BoxLayout.Y_AXIS));
         JScrollPane userFollowerBoardScroll = new JScrollPane(userFollowerBoard, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         userFollowerBoardScroll.getVerticalScrollBar().setUnitIncrement(20);
-
-        // 본 주석 하단에 메세지 객체 생성 및 삽입 코드가 들어감
-        // messageBoard는 하나의 메세지를 구성하는 "패널"
-        // 생성자의 인자로는 메세지 id를 넣어서 생성자가 id를 가지고 패널을 구성함
-        // 생성자 내부에서 id로 메세지 정보를 불러와서 패널 구성해야됨
         
+        // 팔로워도 동일한 방식으로 진행하면 되겠습니다.
         FollowBoard yeahap = new FollowBoard("이름","아이디");
         userFollowerBoard.add(yeahap);
         
@@ -126,19 +157,22 @@ public class Board extends JFrame {
             // 여기는 프로필사진 생성부분인데 그냥 트위터 사진으로 대체
             Image logo =new ImageIcon(Objects.requireNonNull(Main.class.getResource("/image/logo_message.png"))).getImage();
             Image logoIcon = logo.getScaledInstance(50,50,Image.SCALE_SMOOTH);
-
+            
+            
+            // --------------------------- 메세지 내용 ------------------------
+            
             // 본 라벨 생성자에 사용자 이름, 사용자 ID를 넣음
             JLabel userInfo = new JLabel("<html>이은섭<br>@MintCC<html>");
             userInfo.setHorizontalAlignment(JLabel.CENTER);
             userInfo.setVerticalAlignment(JLabel.BOTTOM);
             userInfo.setFont(new Font("맑은 고딕", Font.BOLD, 24));
-
-            JLabel margin = new JLabel("");
+            
 
             // 여기는 메세지 내용을 넣으면 됨
             JLabel message = new JLabel("안녕하세요 안녕하세요 안녕하세요 안녕하세요 ");
             message.setFont(new Font("맑은 고딕", Font.PLAIN, 24));
-
+            
+            // --------------------------- 메세지 내용 ------------------------
             user.add(new JLabel(new ImageIcon(logoIcon)));
             user.add(userInfo);
 
@@ -151,10 +185,23 @@ public class Board extends JFrame {
     
     static class FollowBoard extends JButton {
     	FollowBoard(String username, String userId) {
+    		setAlignmentX(Component.CENTER_ALIGNMENT);
     		setPreferredSize(new Dimension(200, 150));
             setFont(new Font("맑은 고딕", Font.BOLD, 12));
+            setBorderPainted(false);
+            setContentAreaFilled(false);
+            setFocusPainted(false);
     		
             setText(username + "@" + userId);
+            addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					con.dispose();
+					new Board(userId);
+				}
+            	
+            });
     	}
     }
 }

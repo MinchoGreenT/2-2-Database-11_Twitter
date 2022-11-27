@@ -7,6 +7,9 @@ import java.awt.event.FocusListener;
 import java.util.Objects;
 
 public class Login extends JFrame {
+	
+	static String myId;
+	
     Login(){
         setSize(400, 600);
         setLayout(new GridLayout(3,1));
@@ -23,7 +26,7 @@ public class Login extends JFrame {
         optionPanel.setBackground(Color.WHITE);
 
         // 상단 로고 이미지 추가
-        Image logo =new ImageIcon(Objects.requireNonNull(Main.class.getResource("/image/logo.png"))).getImage();
+        Image logo = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/image/logo.png"))).getImage();
         Image logoIcon = logo.getScaledInstance(150,150,Image.SCALE_SMOOTH);
         logoPanel.add(new JLabel(new ImageIcon(logoIcon)), BorderLayout.SOUTH);
 
@@ -77,10 +80,18 @@ public class Login extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                new Board(idField.getText());
                 
                 // idField.getText() : String
                 // pwField.getPassword() : char[]
+                
+                // 가져온 정보로 회원정보 확인 후 로그인 성공 시 보드로 넘어가면 됩니다
+                // 필요한 코드는 조건문으로 회원정보를 확인하는 코드
+                // 성공 시 하단 코드를 실행
+                
+                // 이하는 로그인 성공 시 접속한 아이디를 저장하고 해당 아이디의 보드를 띄우는 코드
+                myId = idField.getText();
+                new Board(myId);
+                
             }
         });
         // ---------------------- 로그인 ----------------------------

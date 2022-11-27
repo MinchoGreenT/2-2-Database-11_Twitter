@@ -146,12 +146,11 @@ public class Register extends JFrame {
                 	pw = inputPw.getPassword();
                     dispose();
                     new Login();
-                    // name
-                    // id
-                    // pw
+                    // name, id, pw에 각각 유저가 입력한 이름, 아이디, 비밀번호가 저장됨
+                    // 저장된 변수들을 통해 유저 테이블에 신규 유저 등록 
                 }
             });
-         // ---------------------- 회원가입 ----------------------------
+            // ---------------------- 회원가입 ----------------------------
             
             inputPanel.add(inputDesc);
             inputPanel.add(inputPwDesc);
