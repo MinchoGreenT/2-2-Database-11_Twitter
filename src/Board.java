@@ -47,7 +47,26 @@ public class Board extends JFrame {
         userFollower.setVerticalAlignment(JLabel.CENTER);
         userFollower.setFont(new Font("맑은 고딕", Font.BOLD, 20));
 
-        JLabel margin = new JLabel("");
+        JButton follow = new JButton("팔로우");
+        follow.setBorder(BorderFactory.createEmptyBorder(10,0,10,0));
+        follow.setBackground(new Color(0x338BFF));
+        follow.setFont(new Font("맑은 고딕", Font.BOLD, 24));
+        follow.setForeground(Color.WHITE);
+        follow.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// 본 공간에 팔로우 기능을 추가. 
+				// 만약 본인의 보드일 경우 버튼은 보이지 않을 것이며 
+				// 아닐 경우 보드 생성자의 인자인 userId를 Main.myId가 팔로우 하게 됨
+			}
+        });
+        if(userId == Login.myId) {
+        	follow.setVisible(false);
+        }
+        
+        JPanel option = new JPanel(new GridLayout(2,1));
+        option.setBackground(new Color(0x97C2FF));
+        
         JButton search = new JButton("검색");
         search.setFont(new Font("맑은 고딕", Font.BOLD, 24));
         search.setBorderPainted(false);
@@ -59,6 +78,7 @@ public class Board extends JFrame {
                 new Search(con);
             }
         });
+        
         JButton newMessage = new JButton("글쓰기");
         newMessage.setFont(new Font("맑은 고딕", Font.BOLD, 24));
         newMessage.setBorderPainted(false);
@@ -71,15 +91,18 @@ public class Board extends JFrame {
             }
         });
         
+        option.add(search);
+        option.add(newMessage);
+        
         // 여긴 프로필사진 넣는곳인데 그냥 트위터 사진으로 함
         userProfile.add(new JLabel(new ImageIcon(logoIcon)));
         userProfile.add(userInfo);
         userProfile.add(userFollowing);
         userProfile.add(userFollower);
-        userProfile.add(search);
-        userProfile.add(newMessage);
-        userProfile.setBackground(new Color(0x85BDFF));
-        // -------------------------------- 프로필 패널 -------------------------------------
+        userProfile.add(option);
+        userProfile.add(follow);
+        userProfile.setBackground(new Color(0x97C2FF));
+        // -------------------------------- 프로필 패널 끝 -------------------------------------
 
         // 메세지들이 출력될 패널, 스크롤 가능
         JPanel userBoard = new JPanel();
