@@ -11,6 +11,8 @@ public class Search extends JFrame {
 	
 	static JFrame con;
 	static JFrame board;
+	Db_connection DB = new Db_connection();
+	
 	
 	Search(JFrame userBoard) {
 		setSize(400, 600);
@@ -45,9 +47,44 @@ public class Search extends JFrame {
 				// inputSearch.getText() 를 통해 검색어를 받고
 				// 받은 검색어를 통해 쿼리문을 짜서 리스트를 받은 다음
 				// userList.add(new UserBoard(이름, 아이디) 형식으로 출력
+				String searchId = inputSearch.getText();
+				
+				String[] searchIdList;
+			
+				
+				if(searchId.equals("")) {
+					searchIdList = DB.sqlUserId();
+					 System.out.println("아앙?");
+
+				}else {
+					searchIdList = DB.sqlUserIdBySearching(searchId);
+					 System.out.println("히잉ㅜ");
+				}
+				
+				int num = searchIdList.length;
+				
+				for(int i = 0; i < num; i++) {
+					 userList.add(new UserBoard(DB.sqlUserNameById(searchIdList[i]), searchIdList[i]));
+					 System.out.println("name: "+DB.sqlUserNameById(searchIdList[i])+" id: "+searchIdList[i]);
+				}
+				
+				userListScroll.setViewportView(userList);
+
+				
 			}
         });
+
         // 이하는 예시 출력
+        String[] searchIdList;
+		searchIdList = DB.sqlUserId();
+		int num = searchIdList.length;
+		
+        for(int i = 0; i < num; i++) {
+			 userList.add(new UserBoard(DB.sqlUserNameById(searchIdList[i]), searchIdList[i]));
+			 System.out.println("name: "+DB.sqlUserNameById(searchIdList[i])+" id: "+searchIdList[i]);
+		}
+        
+        
         UserBoard yeah = new UserBoard("이름", "아이디");
         userList.add(yeah);
         userList.add(new UserBoard("이름","아아아이이이디"));
