@@ -119,8 +119,12 @@ public class Board extends JFrame {
         
         String[] check_I_following = DB.sqlFollowee(Login.myId);
 
+        JButton newMessage = new JButton("글쓰기");
+
+        
 		if(Arrays.asList(check_I_following).contains(currentUserId) == true){
 			follow.setText("팔로우취소");
+		       newMessage.setVisible(true);
 			System.out.println("이 사람은 이미 팔로우 중입니다.");
 		}
 		
@@ -196,10 +200,12 @@ public class Board extends JFrame {
 					userFollowingBoardScroll.setViewportView(userFollowingBoard);
 					}
 					//userFollowingBoardScroll.add(userFollowingBoard);
-					
+				       newMessage.setVisible(true);
+
 				}
 				else if(identi.equals("팔로우취소")) {
-					//Integer num = Integer.parseInt(identi.substring(6)); 
+				       newMessage.setVisible(false);
+					
 					thisB.setBackground(Color.magenta);
 
 					String remove_id = thisB.getName();
@@ -294,7 +300,7 @@ public class Board extends JFrame {
             }
         });
         
-        JButton newMessage = new JButton("글쓰기");
+        
         newMessage.setFont(new Font("맑은 고딕", Font.BOLD, 24));
         newMessage.setBorderPainted(false);
         newMessage.setContentAreaFilled(false);
@@ -310,7 +316,6 @@ public class Board extends JFrame {
             }
           });
         
-       
         
         
         option.add(search);
@@ -360,10 +365,12 @@ public class Board extends JFrame {
 		int count = 0;
 
         while(wordList[count][0] != null){
+        	String nameMatch = DB.sqlUserNameById(wordList[count][0]);
+        	
 			JTextArea textArea1 = new JTextArea();
 			textArea1.setText(wordList[count][1]);
 
-            messageBoard hi = new messageBoard(wordList[count][0], textArea1, wordList[count][2]);
+            messageBoard hi = new messageBoard(nameMatch, wordList[count][0], textArea1, wordList[count][2]);
             count++;
             
             userBoard.add(hi);
@@ -423,7 +430,7 @@ public class Board extends JFrame {
     }
 
     static class messageBoard extends JPanel {
-        messageBoard(String writerId, JTextArea textArea1, String time) {
+        messageBoard(String writerName, String writerId, JTextArea textArea1, String time) {
             setBackground(Color.white);
             setSize(800, 200);
             
@@ -442,10 +449,14 @@ public class Board extends JFrame {
             // --------------------------- 메세지 내용 ------------------------
             
             // 본 라벨 생성자에 사용자 이름, 사용자 ID를 넣음
-            JLabel userInfo = new JLabel(writerId);
-            userInfo.setHorizontalAlignment(JLabel.CENTER);
-            userInfo.setVerticalAlignment(JLabel.BOTTOM);
-            userInfo.setFont(new Font("맑은 고딕", Font.BOLD, 24));
+            JLabel userInfo1 = new JLabel(writerName);
+            userInfo1.setHorizontalAlignment(JLabel.CENTER);
+            userInfo1.setVerticalAlignment(JLabel.TOP);
+            userInfo1.setFont(new Font("맑은 고딕", Font.BOLD, 24));
+			JLabel userInfo2 = new JLabel("@" + writerId);
+            userInfo2.setHorizontalAlignment(JLabel.CENTER);
+            userInfo2.setVerticalAlignment(JLabel.BOTTOM);
+            userInfo2.setFont(new Font("맑은 고딕", Font.BOLD, 24));
             
             String[] timeSet = time.split("\\.");
         	String printTime = timeSet[0] + "년 " + timeSet[1] + "월 " + timeSet[2] + "일 " + timeSet[3] + "시 " + timeSet[4] + "분";       	
@@ -457,7 +468,8 @@ public class Board extends JFrame {
             
             // --------------------------- 메세지 내용 ------------------------
             user.add(new JLabel(new ImageIcon(logoIcon)));
-            user.add(userInfo);
+            user.add(userInfo1);
+			user.add(userInfo2);
             user.add(timeLabel);
 
             messagePanel.add(user);

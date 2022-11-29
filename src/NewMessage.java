@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 public class NewMessage extends JFrame {
 	public static final int LINES = 10;
-	public static final int CHAR_PER_LINE = 20;
+	public static final int CHAR_PER_LINE = 40;
 	
 	NewMessage(JFrame board, String writer, String receiver){
 		setSize(400,150);
