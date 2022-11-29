@@ -21,6 +21,7 @@ public class Board extends JFrame {
 	
 	Integer num_follower = 0;
 	Integer num_followee = 0;
+	Integer my_num_followee = 0;
 	
 	Db_connection DB = new Db_connection();
 
@@ -46,7 +47,11 @@ public class Board extends JFrame {
 		num_followee = followeeInfo.length;
     	
 		System.out.println(currentUser + currentUserId);
-
+			
+		String[] myfolloweeInfo;
+		myfolloweeInfo = DB.sqlFollowee(Login.myId);
+		my_num_followee = myfolloweeInfo.length;
+    	
     	//
     	
     	
@@ -116,7 +121,7 @@ public class Board extends JFrame {
 
 		if(Arrays.asList(check_I_following).contains(currentUserId) == true){
 			follow.setText("팔로우취소");
-			System.out.println("엥?");
+			System.out.println("이 사람은 이미 팔로우 중입니다.");
 		}
 		
         follow.addActionListener(new ActionListener() {
@@ -267,6 +272,7 @@ public class Board extends JFrame {
 				}
 				//SwingUtilities.updateComponentTreeUI(this)
 			}
+
         });
         
         if(userId.equals(Login.myId)) {
@@ -296,9 +302,16 @@ public class Board extends JFrame {
         newMessage.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new NewMessage(con, Login.myId, currentUserId);
+            	
+            	if(follow.getText().equals("팔로우취소") || Login.myId.equals(currentUserId)){
+        			new NewMessage(con, Login.myId, currentUserId);
+            
+        		}
             }
-        });
+          });
+        
+       
+        
         
         option.add(search);
         option.add(newMessage);

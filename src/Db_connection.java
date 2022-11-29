@@ -80,7 +80,6 @@ public static int Login(String id, String pw) {
 	  	  		 array[count][2] = rs.getString(4) + "." + rs.getString(5) + "." + rs.getString(6) + "." + rs.getString(7) + "." + rs.getString(8) + "." + rs.getString(9);
 	  	  		 count++;
 	  	  	 }	  	  	 
-	  	  	 con.close();
 	  	  } catch(SQLException e) {
 	  	  	   e.printStackTrace();
 	  	    }
