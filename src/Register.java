@@ -10,7 +10,7 @@ public class Register extends JFrame {
     
     static String name;
     static String id;
-    static char[] pw;
+    static String pw = "";
 
     // 이름 입력
     static class RegisterName extends JFrame {
@@ -143,9 +143,16 @@ public class Register extends JFrame {
             registerFinish.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                	pw = inputPw.getPassword();
-                    dispose();
-                    new Login();
+                	for(char pwd : inputPw.getPassword()) {
+                		pw += pwd;
+                	}
+                	
+                	if(Db_connection.Register(name, id, pw) == 0) {
+                		System.out.println("new register");
+                		dispose();
+                		new Login();                		
+                	}
+
                     // name, id, pw에 각각 유저가 입력한 이름, 아이디, 비밀번호가 저장됨
                     // 저장된 변수들을 통해 유저 테이블에 신규 유저 등록 
                 }

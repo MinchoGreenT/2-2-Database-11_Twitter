@@ -2,7 +2,7 @@ import java.io.*;
 import java.sql.*;
 
 public class Db_connection {
-	public Connection con;
+	public static Connection con;
 	
 	public Db_connection() {
 		
@@ -18,6 +18,55 @@ public class Db_connection {
 			}
 	}
 
+public static int Login(String id, String pw) {
+		
+		String loginQuery = "SELECT * from loginInfo where id = '" + id + "' and pw = '"
+				+ pw + "';";
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(loginQuery);
+			
+			while(rs.next()) {
+				System.out.println(rs.getString(1));
+				System.out.println(rs.getString(2));
+				return 0;
+			}
+			return 1;
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return 1;
+	}
+	
+	public static int Register(String nickName, String id, String pw) {
+		String registerQuery = "INSERT into loginInfo values('" + nickName + "', '" + id + "', '" 
+				+ pw + "');";
+		
+		try {
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate(registerQuery);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return 1;
+		}
+		return 0;
+		
+		
+	}
+	
+	public static int UpdatePw(String id, String newPw) {
+		
+		String updatePw = "update loginInfo set pw = '" + newPw + "' where id = '" + id + "';";
+		try {
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate(updatePw);
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return 1;
+		}		
+		return 0;
+	}
+	
 	public String[][] getWord(String receiver) {
 	   String query = "SELECT * FROM Word WHERE receiver = \"" + receiver + "\" ORDER BY year DESC, month DESC, day DESC, hour DESC, minute DESC, second DESC";
 	   String[][] array = new String[100][3];

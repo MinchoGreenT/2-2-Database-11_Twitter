@@ -79,8 +79,21 @@ public class Login extends JFrame {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
+                String id = idField.getText();
+                String pw = "";
+                for(char pwd : pwField.getPassword()) {
+                	pw += pwd;
+                }
                 
+                
+                if(Db_connection.Login(id, pw) == 0) {
+                	myId = id;
+                	new Board(myId);              	
+                	dispose();
+                }
+                else {
+                	inputDesc.setText("아이디와 비밀번호가 맞지 않습니다!");
+                }
                 // idField.getText() : String
                 // pwField.getPassword() : char[]
                 
@@ -89,8 +102,6 @@ public class Login extends JFrame {
                 // 성공 시 하단 코드를 실행
                 
                 // 이하는 로그인 성공 시 접속한 아이디를 저장하고 해당 아이디의 보드를 띄우는 코드
-                myId = idField.getText();
-                new Board(myId);
                 
             }
         });
