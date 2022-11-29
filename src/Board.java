@@ -296,7 +296,7 @@ public class Board extends JFrame {
         newMessage.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new NewMessage(con, userId);
+                new NewMessage(con, Login.myId, currentUserId);
             }
         });
         
@@ -342,16 +342,19 @@ public class Board extends JFrame {
         // 생성자의 인자로는 메세지 id를 넣어서 생성자가 id를 가지고 패널을 구성함
         // 생성자 내부에서 id로 메세지 정보를 불러와서 패널 구성해야됨
         
-        messageBoard hi = new messageBoard(1);
-        userBoard.add(hi);
-        userBoard.add(new messageBoard(1));
-        userBoard.add(new messageBoard(1));
-        userBoard.add(new messageBoard(1));
-        userBoard.add(new messageBoard(1));
-        userBoard.add(new messageBoard(1));
-        userBoard.add(new messageBoard(1));
-        userBoard.add(new messageBoard(1));
-        userBoard.add(new messageBoard(1));
+        String[][] wordList = new String[100][3];
+		wordList = DB.getWord(currentUserId);
+		int count = 0;
+
+        while(wordList[count][0] != null){
+			JTextArea textArea1 = new JTextArea();
+			textArea1.setText(wordList[count][1]);
+
+            messageBoard hi = new messageBoard(wordList[count][0], textArea1, wordList[count][2]);
+            count++;
+            
+            userBoard.add(hi);
+		}
         
         //-------------------------------------------------------- 메세지 끝
         
@@ -407,7 +410,7 @@ public class Board extends JFrame {
     }
 
     static class messageBoard extends JPanel {
-        messageBoard(int id) {
+        messageBoard(String writerId, JTextArea textArea1, String time) {
             setBackground(Color.white);
             setSize(800, 200);
             
@@ -426,19 +429,23 @@ public class Board extends JFrame {
             // --------------------------- 메세지 내용 ------------------------
             
             // 본 라벨 생성자에 사용자 이름, 사용자 ID를 넣음
-            JLabel userInfo = new JLabel("<html>이은섭<br>@MintCC<html>");
+            JLabel userInfo = new JLabel(writerId);
             userInfo.setHorizontalAlignment(JLabel.CENTER);
             userInfo.setVerticalAlignment(JLabel.BOTTOM);
             userInfo.setFont(new Font("맑은 고딕", Font.BOLD, 24));
             
+            String[] timeSet = time.split("\\.");
+        	String printTime = timeSet[0] + "년 " + timeSet[1] + "월 " + timeSet[2] + "일 " + timeSet[3] + "시 " + timeSet[4] + "분";       	
+        	JLabel timeLabel = new JLabel(printTime);
 
             // 여기는 메세지 내용을 넣으면 됨
-            JLabel message = new JLabel("안녕하세요 안녕하세요 안녕하세요 안녕하세요 ");
+            JTextArea message = textArea1;
             message.setFont(new Font("맑은 고딕", Font.PLAIN, 24));
             
             // --------------------------- 메세지 내용 ------------------------
             user.add(new JLabel(new ImageIcon(logoIcon)));
             user.add(userInfo);
+            user.add(timeLabel);
 
             messagePanel.add(user);
             messagePanel.add(message);

@@ -8,7 +8,7 @@ public class Db_connection {
 		
 		String url = "jdbc:mysql://localhost:3306/madang";
 		String userid = "madang";
-		String pwd = "1234";
+		String pwd = "1234"; //¿ø·¡´Â 1234
 		
 		try {
 			con = DriverManager.getConnection(url,userid,pwd);
@@ -16,6 +16,38 @@ public class Db_connection {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			}
+	}
+
+	public String[][] getWord(String receiver) {
+	   String query = "SELECT * FROM Word WHERE receiver = \"" + receiver + "\" ORDER BY year DESC, month DESC, day DESC, hour DESC, minute DESC, second DESC";
+	   String[][] array = new String[100][3];
+	   try { 
+	  	  	 Statement stmt=con.createStatement();
+	  	  	 ResultSet rs=stmt.executeQuery(query);
+	  	  	 int count = 0;
+	  	  	 while(rs.next() || (count == 100)) {
+	  	  		 array[count][0] = rs.getString(1);	  	  		 
+	  	  		 array[count][1] = rs.getString(3);
+	  	  		 array[count][2] = rs.getString(4) + "." + rs.getString(5) + "." + rs.getString(6) + "." + rs.getString(7) + "." + rs.getString(8) + "." + rs.getString(9);
+	  	  		 count++;
+	  	  	 }	  	  	 
+	  	  	 con.close();
+	  	  } catch(SQLException e) {
+	  	  	   e.printStackTrace();
+	  	    }
+	   return array;
+   }
+
+   public void setWord(String writer, String receiver, String content, int year, int month, int day, int hour, int minute, int second) {
+	  	  String query="INSERT INTO Word VALUES(" + "\"" +  writer + "\", " + "\"" + receiver + "\", " + "\"" + content + "\"," + year + "," + month + "," + day + "," + hour + "," + minute + "," + second + ")"; 
+	  	  System.out.println(query);
+	  	  try { 
+	  	  	 Statement stmt=con.createStatement();
+	  	  	 stmt.execute(query);
+
+	  	  } catch(SQLException e) {
+	  	  	   e.printStackTrace();
+	  	    }
 	}
 	
 	public void sqlSetting() {
