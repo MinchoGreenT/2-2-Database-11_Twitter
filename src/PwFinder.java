@@ -11,7 +11,7 @@ public class PwFinder extends JFrame {
     }
     
     static String id;
-    static char[] newPw;
+    static String newPw = "";
 
     static class InputInfo extends JFrame {
         InputInfo() {
@@ -118,9 +118,14 @@ public class PwFinder extends JFrame {
             toLogin.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                	newPw = inputPw.getPassword();
-                    dispose();
-                    new Login();
+                	for(char pwd : inputPw.getPassword()) {
+                		newPw += pwd;
+                	}
+                	if (Db_connection.UpdatePw(id, newPw) == 0) {
+            			System.out.println("password is updated");
+            			dispose();
+            			new Login();                		
+                	}
 	                 // id에 아이디, newPw에 바꿀 비밀번호가 들어감
 	                 // 아이디를 통해 접근해서 비밀번호를 newPw로 바꿔주면 됩니다
                 }
