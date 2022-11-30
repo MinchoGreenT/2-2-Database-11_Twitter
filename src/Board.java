@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
@@ -59,7 +61,7 @@ public class Board extends JFrame {
         setSize(1200, 800);
         setLayout(new BorderLayout());
 
-        JPanel userProfile = new JPanel(new GridLayout(1, 6));
+        JPanel userProfile = new JPanel(new GridLayout(1, 6, 5, 0));
         userProfile.setBorder(BorderFactory.createEmptyBorder(10,200,10,200));
 
         Image logo =new ImageIcon(Objects.requireNonNull(Main.class.getResource("/image/logo_profile.png"))).getImage();
@@ -86,22 +88,24 @@ public class Board extends JFrame {
         userFollowing.setFont(new Font("¸¼Àº °íµñ", Font.BOLD, 20));
         
         JPanel userFollowingBoard = new JPanel();
-        userFollowingBoard.setBackground(Color.WHITE);
+        userFollowingBoard.setBackground(new Color(0xE9F2FF));
         userFollowingBoard.setLayout(new BoxLayout(userFollowingBoard, BoxLayout.Y_AXIS));
         JScrollPane userFollowingBoardScroll = new JScrollPane(userFollowingBoard, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         userFollowingBoardScroll.getVerticalScrollBar().setUnitIncrement(20);
         
 
         JPanel userFollowerBoard = new JPanel();
-        userFollowerBoard.setBackground(Color.WHITE);
+        userFollowerBoard.setBackground(new Color(0xE9F2FF));
         userFollowerBoard.setLayout(new BoxLayout(userFollowerBoard, BoxLayout.Y_AXIS));
         JScrollPane userFollowerBoardScroll = new JScrollPane(userFollowerBoard, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         userFollowerBoardScroll.getVerticalScrollBar().setUnitIncrement(20);
         
-        
-        
-        
-        
+        JLabel followerDesc = new JLabel("ÆÈ·Î¿ö ¸ñ·Ï");
+        followerDesc.setBorder(new EmptyBorder(25,30,25,30));
+        followerDesc.setPreferredSize(new Dimension(180, 80));
+        followerDesc.setFont(new Font("¸¼Àº °íµñ", Font.BOLD, 20));
+        followerDesc.setBackground(new Color(0xE9F2FF));
+        followerDesc.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         
         JLabel userFollower = new JLabel("<html>ÆÈ·Î¿ö<br>" + followerNum + "<html>");
@@ -112,21 +116,57 @@ public class Board extends JFrame {
         
      
         JButton follow = new JButton("ÆÈ·Î¿ì");
-        follow.setBorder(BorderFactory.createEmptyBorder(10,0,10,0));
-        follow.setBackground(new Color(0x338BFF));
+        follow.setBorderPainted(false);
+        follow.setBackground(new Color(0xB8D3FF));
         follow.setFont(new Font("¸¼Àº °íµñ", Font.BOLD, 24));
         follow.setForeground(Color.WHITE);
         
-        String[] check_I_following = DB.sqlFollowee(Login.myId);
-
-        JButton newMessage = new JButton("±Û¾²±â");
-
         
-		if(Arrays.asList(check_I_following).contains(currentUserId) == true){
-			follow.setText("ÆÈ·Î¿ìÃë¼Ò");
-		       newMessage.setVisible(true);
+        JPanel option = new JPanel(new GridLayout(2,1));
+        option.setBackground(new Color(0x97C2FF));
+        
+        JButton search = new JButton("°Ë»ö");
+        search.setFont(new Font("¸¼Àº °íµñ", Font.BOLD, 20));
+        search.setBorderPainted(false);
+        search.setContentAreaFilled(false);
+        search.setFocusPainted(false);
+        search.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Search(con);
+            }
+        });
+        
+        JButton newMessage = new JButton("±Û¾²±â");
+        newMessage.setFont(new Font("¸¼Àº °íµñ", Font.BOLD, 20));
+        newMessage.setBorderPainted(false);
+        newMessage.setContentAreaFilled(false);
+        newMessage.setFocusPainted(false);
+	    newMessage.setVisible(false);
+        newMessage.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	
+            	if(follow.getText().equals("ÆÈ·ÎÀ×") || Login.myId.equals(currentUserId)){
+        			new NewMessage(con, Login.myId, currentUserId);
+            
+        		}
+            }
+          });
+        
+        option.add(search);
+        option.add(newMessage);
+
+        String[] check_I_following = DB.sqlFollowee(Login.myId);
+        
+        if(Arrays.asList(check_I_following).contains(currentUserId) == true){
+			follow.setText("ÆÈ·ÎÀ×"); 
+			follow.setBackground(new Color(0x6DC4FF));
+		    newMessage.setVisible(true);
 			System.out.println("ÀÌ »ç¶÷Àº ÀÌ¹Ì ÆÈ·Î¿ì ÁßÀÔ´Ï´Ù.");
 		}
+        if(Login.myId.equals(userId))
+        	newMessage.setVisible(true);
 		
         follow.addActionListener(new ActionListener() {
 			@Override
@@ -142,7 +182,8 @@ public class Board extends JFrame {
 						
 				if(identi.equals("ÆÈ·Î¿ì")) {
 					//Integer num = Integer.parseInt(identi.substring(6)); 
-					thisB.setBackground(Color.cyan);
+					thisB.setBackground(new Color(0x6DC4FF));
+				       newMessage.setVisible(true);
 					String plus_id = thisB.getName();
 					
 					DB.sqlPlus(Login.myId,currentUserId);
@@ -168,45 +209,34 @@ public class Board extends JFrame {
 					followeeInfo = DB.sqlFollowee(Login.myId); //³»°¡ ÆÈ·Î¿ö
 					num_followee = followeeInfo.length;
 //					
-					thisB.setText("ÆÈ·Î¿ìÃë¼Ò");
+					thisB.setText("ÆÈ·ÎÀ×");
 //					
 //					printUsers(followeeInfo);
 //					printMyUsers(followeeInfo);
-					if(num_currentfollower >0) {
 
 					userFollowerBoard.removeAll();
+					userFollowerBoard.add(followerDesc);
 					for(int i = 0; i < num_currentfollower; i++) {
 						String find_follower_name = DB.sqlUserNameById(currentfollowerInfo[i]);
 						
 						
 						FollowBoard yeahap = new FollowBoard(find_follower_name, currentfollowerInfo[i]);
-				        userFollowerBoard.add(yeahap);
+						JPanel finfo = new JPanel();
+						finfo.setBackground(new Color(0xE9F2FF));
+						
+						finfo.add(yeahap);
+						finfo.add(new JLabel(""));
+						
+						userFollowerBoard.add(finfo);
 
-					}
-					userFollowerBoardScroll.setViewportView(userFollowerBoard);
 					}
 					
-					if(num_currentfollowee >0) {
-
-					userFollowingBoard.removeAll();
-					for(int i = 0; i < num_currentfollowee; i++) {
-						String find_followee_name = DB.sqlUserNameById(currentfolloweeInfo[i]);
-						
-						
-						FollowBoard yeahap = new FollowBoard(find_followee_name, currentfolloweeInfo[i]);
-				        userFollowingBoard.add(yeahap);
-
-					}
-					userFollowingBoardScroll.setViewportView(userFollowingBoard);
-					}
-					//userFollowingBoardScroll.add(userFollowingBoard);
-				       newMessage.setVisible(true);
 
 				}
-				else if(identi.equals("ÆÈ·Î¿ìÃë¼Ò")) {
+				else if(identi.equals("ÆÈ·ÎÀ×")) {
 				       newMessage.setVisible(false);
 					
-					thisB.setBackground(Color.magenta);
+					thisB.setBackground(new Color(0xB8D3FF));
 
 					String remove_id = thisB.getName();
 					
@@ -225,11 +255,6 @@ public class Board extends JFrame {
 					currentfolloweeInfo = DB.sqlFollowee(currentUserId); //³»°¡ ÆÈ·Î¿ö
 					Integer num_currentfollowee = currentfolloweeInfo.length;
 					userFollowing.setText("<html>ÆÈ·ÎÀ×<br>" + num_currentfollowee + "<html>");
-					
-					
-					
-					
-					
 
 					String[] followerInfo;
 					followerInfo = DB.sqlFollower(Login.myId); //³ªÀÇ ÆÈ·Î¿ö
@@ -239,11 +264,9 @@ public class Board extends JFrame {
 					String[] followeeInfo;
 					followeeInfo = DB.sqlFollowee(Login.myId); //³»°¡ ÆÈ·Î¿ö
 					num_follower = followeeInfo.length;
-					
-					
-					if(num_currentfollower >0) {
 
 					userFollowerBoard.removeAll();
+					userFollowerBoard.add(followerDesc);
 					for(int i = 0; i < num_currentfollower; i++) {
 						String find_follower_name = DB.sqlUserNameById(currentfollowerInfo[i]);
 						
@@ -253,26 +276,6 @@ public class Board extends JFrame {
 
 					}
 					userFollowerBoardScroll.setViewportView(userFollowerBoard);
-					}else {
-						userFollowerBoard.removeAll();
-
-					}
-					if(num_currentfollowee >0) {
-
-					userFollowingBoard.removeAll();
-					for(int i = 0; i < num_currentfollowee; i++) {
-						String find_followee_name = DB.sqlUserNameById(currentfolloweeInfo[i]);
-						
-						
-						FollowBoard yeahap = new FollowBoard(find_followee_name, currentfolloweeInfo[i]);
-				        userFollowingBoard.add(yeahap);
-
-					}
-					userFollowingBoardScroll.setViewportView(userFollowingBoard);
-					}else {
-						userFollowingBoard.removeAll();
-
-					}
 					
 					
 				}
@@ -285,47 +288,9 @@ public class Board extends JFrame {
         	follow.setVisible(false);
         }
         
-        JPanel option = new JPanel(new GridLayout(2,1));
-        option.setBackground(new Color(0x97C2FF));
-        
-        JButton search = new JButton("°Ë»ö");
-        search.setFont(new Font("¸¼Àº °íµñ", Font.BOLD, 24));
-        search.setBorderPainted(false);
-        search.setContentAreaFilled(false);
-        search.setFocusPainted(false);
-        search.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new Search(con);
-            }
-        });
-        
-        
-        newMessage.setFont(new Font("¸¼Àº °íµñ", Font.BOLD, 24));
-        newMessage.setBorderPainted(false);
-        newMessage.setContentAreaFilled(false);
-        newMessage.setFocusPainted(false);
-        newMessage.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            	
-            	if(follow.getText().equals("ÆÈ·Î¿ìÃë¼Ò") || Login.myId.equals(currentUserId)){
-        			new NewMessage(con, Login.myId, currentUserId);
-            
-        		}
-            }
-          });
-        
-        
-        
-        option.add(search);
-        option.add(newMessage);
-        
-        
-        
         JButton home = new JButton("³» È¨");
         home.setBorder(BorderFactory.createEmptyBorder(10,0,10,0));
-        home.setBackground(new Color(0x338BFF));
+        home.setBackground(new Color(0x6DC4FF));
         home.setFont(new Font("¸¼Àº °íµñ", Font.BOLD, 24));
         home.setForeground(Color.WHITE);
         home.addActionListener(new ActionListener() {
@@ -349,7 +314,7 @@ public class Board extends JFrame {
 
         // ¸Þ¼¼ÁöµéÀÌ Ãâ·ÂµÉ ÆÐ³Î, ½ºÅ©·Ñ °¡´É
         JPanel userBoard = new JPanel();
-        userBoard.setBackground(Color.WHITE);
+        userBoard.setBackground(new Color(0xE9F2FF));
         userBoard.setLayout(new BoxLayout(userBoard, BoxLayout.Y_AXIS));
         JScrollPane userBoardScroll = new JScrollPane(userBoard, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         userBoardScroll.getVerticalScrollBar().setUnitIncrement(20);
@@ -389,13 +354,28 @@ public class Board extends JFrame {
 	     // ¿©±â¿¡ ÆÈ·ÎÀ× À¯ÀúµéÀ» ºÒ·¯¿Í¼­ Ãâ·ÂÇÏ¸é µÇ°Ú½À´Ï´Ù
 	     // userFollowingBoard.add(new FollowBoard(À¯ÀúÀÌ¸§, À¯Àú¾ÆÀÌµð) Çü½ÄÀ¸·Î Ãß°¡
 	     // ¹Ýº¹¹®À» ÅëÇØ¼­ ÆÈ·ÎÀ× ¼ö¸¸Å­ Ãß°¡ÇØÁÖ¸é µË´Ï´Ù
-		
+
+        JLabel followingDesc = new JLabel("ÆÈ·ÎÀ× ¸ñ·Ï");
+        followingDesc.setPreferredSize(new Dimension(180, 80));
+        followingDesc.setFont(new Font("¸¼Àº °íµñ", Font.BOLD, 20));
+        followingDesc.setBackground(new Color(0xE9F2FF));
+        followingDesc.setBorder(new EmptyBorder(10,10,10,10));
+        followingDesc.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        userFollowingBoard.add(followingDesc);
         for(int i = 0; i < num_followee; i++) {
 			String find_followee_name = DB.sqlUserNameById(followeeInfo[i]);
 			
 			
 			FollowBoard yeah = new FollowBoard(find_followee_name, followeeInfo[i]);
-	        userFollowingBoard.add(yeah);
+			
+			JPanel finfo = new JPanel();
+			finfo.setBackground(new Color(0xE9F2FF));
+			
+			finfo.add(yeah);
+			finfo.add(new JLabel(""));
+			
+	        userFollowingBoard.add(finfo);
 
 		}
         
@@ -410,13 +390,20 @@ public class Board extends JFrame {
         ////////////////////////////////////////////
         
         // ÆÈ·Î¿öµµ µ¿ÀÏÇÑ ¹æ½ÄÀ¸·Î ÁøÇàÇÏ¸é µÇ°Ú½À´Ï´Ù.
+        
+        userFollowerBoard.add(followerDesc);
         for(int i = 0; i < num_follower; i++) {
 			String find_follower_name = DB.sqlUserNameById(followerInfo[i]);
 			
-			
 			FollowBoard yeahap = new FollowBoard(find_follower_name, followerInfo[i]);
-	        userFollowerBoard.add(yeahap);
-
+	        
+			JPanel finfo = new JPanel();
+			finfo.setBackground(new Color(0xE9F2FF));
+			
+			finfo.add(yeahap);
+			finfo.add(new JLabel(""));
+			
+			userFollowerBoard.add(finfo);
 		}
         
         //-------------------------------------------------------- ÆÈ·ÎÀ×/ÆÈ·Î¿ö ³¡
@@ -431,11 +418,11 @@ public class Board extends JFrame {
 
     static class messageBoard extends JPanel {
         messageBoard(String writerName, String writerId, JTextArea textArea1, String time) {
-            setBackground(Color.white);
-            setSize(800, 200);
+            setBackground(new Color(0xE9F2FF));
             
             JPanel messagePanel = new JPanel(new GridLayout(2,1));
-            messagePanel.setBorder(new TitledBorder(new LineBorder(Color.black,5)));
+            messagePanel.setPreferredSize(new Dimension(600,140));
+            messagePanel.setBorder(new TitledBorder(new LineBorder(new Color(0x97C2FF),4, true)));
             messagePanel.setBackground(Color.white);
 
             JPanel user = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -452,11 +439,11 @@ public class Board extends JFrame {
             JLabel userInfo1 = new JLabel(writerName);
             userInfo1.setHorizontalAlignment(JLabel.CENTER);
             userInfo1.setVerticalAlignment(JLabel.TOP);
-            userInfo1.setFont(new Font("¸¼Àº °íµñ", Font.BOLD, 24));
+            userInfo1.setFont(new Font("¸¼Àº °íµñ", Font.BOLD, 20));
 			JLabel userInfo2 = new JLabel("@" + writerId);
             userInfo2.setHorizontalAlignment(JLabel.CENTER);
             userInfo2.setVerticalAlignment(JLabel.BOTTOM);
-            userInfo2.setFont(new Font("¸¼Àº °íµñ", Font.BOLD, 24));
+            userInfo2.setFont(new Font("¸¼Àº °íµñ", Font.BOLD, 20));
             
             String[] timeSet = time.split("\\.");
         	String printTime = timeSet[0] + "³â " + timeSet[1] + "¿ù " + timeSet[2] + "ÀÏ " + timeSet[3] + "½Ã " + timeSet[4] + "ºÐ";       	
@@ -464,6 +451,7 @@ public class Board extends JFrame {
 
             // ¿©±â´Â ¸Þ¼¼Áö ³»¿ëÀ» ³ÖÀ¸¸é µÊ
             JTextArea message = textArea1;
+            message.setBorder(new EmptyBorder(0,15,0,15));
             message.setFont(new Font("¸¼Àº °íµñ", Font.PLAIN, 24));
             
             // --------------------------- ¸Þ¼¼Áö ³»¿ë ------------------------
@@ -481,12 +469,13 @@ public class Board extends JFrame {
     
     static class FollowBoard extends JButton {
     	FollowBoard(String username, String userId) {
+    		
     		setAlignmentX(Component.CENTER_ALIGNMENT);
-    		setPreferredSize(new Dimension(200, 150));
-            setFont(new Font("¸¼Àº °íµñ", Font.BOLD, 12));
-            setBorderPainted(false);
-            setContentAreaFilled(false);
+    		setPreferredSize(new Dimension(180, 80));
+            setFont(new Font("¸¼Àº °íµñ", Font.BOLD, 15));
+            setBackground(Color.WHITE);
             setFocusPainted(false);
+            setBorder(new CompoundBorder(new LineBorder(new Color(0x97C2FF), 5, true), new EmptyBorder(20,0,20,0)));
     		
             setText(username + "@" + userId);
             addActionListener(new ActionListener() {
